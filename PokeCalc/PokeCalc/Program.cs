@@ -35,10 +35,7 @@ namespace PokeCalc
                     case "help":
                         { Help(); break;}
                     default:
-                        {
-
-                            break;
-                        }
+                        { pokecalc.Calculate(command); break;}
                 }//end switch
             }//End while
 

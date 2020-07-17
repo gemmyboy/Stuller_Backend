@@ -1,21 +1,20 @@
 {
   "version": 2,
-  "dgSpecHash": "ZZVHmy62CJAxcePxGJzlYxfJX3Zp0ywpSWeUqYAibZBVtiBpDd/rwevcCR2lRZWtYL9D/2xyGIzhawYomb5lTg==",
+  "dgSpecHash": "mYZh7+gLnySHmah+TZ4KDNNRDjACYRaFmpJvjqcDqeTtjJVyzTaJcnfR7PihcCIHchROtPCy/u2fQqoQtpvpmg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Marcus\\Desktop\\Stuller_Backend\\PokeCalc\\PokeCalc\\PokeCalc.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Marcus\\.nuget\\packages\\system-web-helpers.dll\\1.0.0\\system-web-helpers.dll.1.0.0.nupkg.sha512"
+    "C:\\Users\\Marcus\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
+    "C:\\Users\\Marcus\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\3.1.0\\microsoft.extensions.caching.abstractions.3.1.0.nupkg.sha512",
+    "C:\\Users\\Marcus\\.nuget\\packages\\microsoft.extensions.caching.memory\\3.1.0\\microsoft.extensions.caching.memory.3.1.0.nupkg.sha512",
+    "C:\\Users\\Marcus\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\3.1.0\\microsoft.extensions.dependencyinjection.abstractions.3.1.0.nupkg.sha512",
+    "C:\\Users\\Marcus\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\3.1.0\\microsoft.extensions.logging.abstractions.3.1.0.nupkg.sha512",
+    "C:\\Users\\Marcus\\.nuget\\packages\\microsoft.extensions.options\\3.1.0\\microsoft.extensions.options.3.1.0.nupkg.sha512",
+    "C:\\Users\\Marcus\\.nuget\\packages\\microsoft.extensions.primitives\\3.1.0\\microsoft.extensions.primitives.3.1.0.nupkg.sha512",
+    "C:\\Users\\Marcus\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\Marcus\\.nuget\\packages\\pokeapinet\\3.0.0\\pokeapinet.3.0.0.nupkg.sha512",
+    "C:\\Users\\Marcus\\.nuget\\packages\\system.collections.immutable\\1.7.0\\system.collections.immutable.1.7.0.nupkg.sha512",
+    "C:\\Users\\Marcus\\.nuget\\packages\\system.text.encodings.web\\4.7.0\\system.text.encodings.web.4.7.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'System-Web-Helpers.dll 1.0.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETCoreApp,Version=v3.1'. This package may not be fully compatible with your project.",
-      "libraryId": "System-Web-Helpers.dll",
-      "targetGraphs": [
-        ".NETCoreApp,Version=v3.1"
-      ]
-    }
-  ]
+  "logs": []
 }

@@ -29,6 +29,9 @@ Design Notes:
 		help - list commands and explain what they do
 		quit - exist the application
 
+	Pulled in this Library/API to simplify JSON serialization by using their models/objects
+	https://gitlab.com/PoroCYon/PokeApi.NET/-/tree/v2/
+
 ------------------------------------------------------------------------------------------------------------------------
 Technical Notes:
 	IDE: Visual Studios 2019

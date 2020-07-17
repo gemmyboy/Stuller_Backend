@@ -5,20 +5,20 @@ namespace NUnitTest
 {
     public class Tests
     {
-        private PokeCalc.PokeCalc pk1 = null;
-        private PokeCalc.PokeCalc pk2 = null;
+        private PokeCalc.PokeCalc Pk1 = null;
+        private PokeCalc.PokeCalc Pk2 = null;
 
         [SetUp]
         public void Setup()
         {
-            pk1 = PokeCalc.PokeCalc.Instance();
-            pk2 = PokeCalc.PokeCalc.Instance();
+            Pk1 = PokeCalc.PokeCalc.Instance();
+            Pk2 = PokeCalc.PokeCalc.Instance();
         }
 
         [Test]
         public void Test1()
         {
-            Assert.IsTrue(pk1 == pk2);
+            Assert.IsTrue(Pk1 == Pk2);
         }
     }
 }

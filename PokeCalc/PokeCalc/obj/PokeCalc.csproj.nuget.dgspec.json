@@ -38,9 +38,9 @@
       "frameworks": {
         "netcoreapp3.1": {
           "dependencies": {
-            "System-Web-Helpers.dll": {
+            "PokeApiNet": {
               "target": "Package",
-              "version": "[1.0.0, )"
+              "version": "[3.0.0, )"
             }
           },
           "imports": [
