@@ -9,9 +9,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Text.Json;
-using System.Threading.Tasks;
 using PokeApiNet;
 
 namespace PokeCalc
@@ -24,12 +21,12 @@ namespace PokeCalc
         //-------- Member Vars -----------
 
         private static PokeCalc PokeCalcInstance = null;                //Object Instance
-        private const string BaseURL = "https://pokeapi.co/api/v2/";    //Base URL
-        private PokeApiNet.PokeApiClient PAC = new PokeApiClient();
+        private const int str_maxlength = 57;                           //Max Length of String for Console Output Window
+        private PokeApiClient PAC = new PokeApiClient();
 
         //Caching mechanism used to minimize web API requests.
         private Dictionary<string, Pokemon> Cache_PokemonNameToObj = new Dictionary<string, Pokemon>();
-        //private Dictionary<string, List<string>> Cache_PokemonTypevsType = new Dictionary<string, List<string>>();
+        private Dictionary<string, PokeApiNet.Type> Cache_PokemonTypeToTypeObj = new Dictionary<string, PokeApiNet.Type>();
 
 
         //--------------------------------
@@ -49,86 +46,124 @@ namespace PokeCalc
         public async void Calculate(string pokemonname)
         {
             Pokemon pokemon;
+
+            //Check Cache: if it's not there, pull data and store in cache.
             if (!Cache_PokemonNameToObj.TryGetValue(pokemonname, out pokemon))
-                pokemon = await PAC.GetResourceAsync<Pokemon>(pokemonname);
+            {
+                try { pokemon = await PAC.GetResourceAsync<Pokemon>(pokemonname); }
+                catch(Exception) { Console.WriteLine("Invalid Pokemon Name or Command!"); return; }
+                Cache_PokemonNameToObj.Add(pokemonname, pokemon);
+            }
 
-            PokeApiNet.Type type = await PAC.GetResourceAsync<PokeApiNet.Type>(pokemon.Types[0].Type.Name);
-            
-            
+            Output_PokemonData(pokemon.Name, pokemon.Types);
 
+            //Pokemon can be multiple types i.e.: Flying/Normal
+            for(int t_iter = 0; t_iter < pokemon.Types.Count; t_iter++)
+            {
+                PokemonType t_type = pokemon.Types[t_iter];
+                PokeApiNet.Type type;
 
+                //Check Cache: if it's not there, pull data and store in cache.
+                if (!Cache_PokemonTypeToTypeObj.TryGetValue(t_type.Type.Name, out type))
+                {
+                    type = await PAC.GetResourceAsync<PokeApiNet.Type>(t_type.Type.Name);
+                    Cache_PokemonTypeToTypeObj.Add(t_type.Type.Name, type);
+                }
 
+                Output_TypeVsTypeData(type, t_iter, (t_iter == (pokemon.Types.Count - 1)));
+            }//End foreach
         }//End Calculate()
 
 
         //--------------------------------
         //------ Helper Functions --------
 
-        /*
-        //RequestTypeVsType -: chains together the url to make the request
-        private List<string> RequestTypeVsType(string typename)
+        //Output_PokemonData -: Pretty Prints base Pokemon data
+        private void Output_PokemonData(string pokename, List<PokemonType> pokemontype)
         {
-            List<string> t_name;
-            if (Cache_PokemonTypevsType.TryGetValue(typename, out t_name))
-                return t_name;
-            else
+            if (string.IsNullOrWhiteSpace(pokename) || pokemontype.Count == 0) throw new System.ArgumentException();
+
+            //String is 57 Characters long
+            Console.WriteLine("---------------------------------------------------------");
+            Console.WriteLine("| Pokemon Base Data                                     |");
+            Console.WriteLine("|                                                       |");
+
+            string str_pokemonname = "| Pokemon Name: ";
+            string str_end = "|";
+
+            //Note: Calculates even character length and pads the rest with spaces; also capitalizes first letter of var pokename
+            Console.WriteLine(str_pokemonname + new System.Globalization.CultureInfo("en-US", false).TextInfo.ToTitleCase(pokename)
+                + (new string(' ', str_maxlength - str_pokemonname.Length - pokename.Length - str_end.Length)) + str_end);
+
+            foreach(var str_type in pokemontype)
             {
-                t_name = FindTypeData(RequestData(BaseURL + "/type/" + typename).Result);
-                Cache_PokemonTypevsType.Add(typename, t_name);
-                return t_name;
-            }
-        }//End RequestTypeVsType()
+                string str_pokemontype = "| Pokemon Type: ";
 
-        //RequestPokemonType -: chains together the url to make the request
-        private List<string> RequestPokemonType(string pokemonname)
+                //Note: Calculates even character length and pads the rest with spaces; also capitalizes first letter of var str_type.Type.Name
+                Console.WriteLine(str_pokemontype + new System.Globalization.CultureInfo("en-US", false).TextInfo.ToTitleCase(str_type.Type.Name)
+                    + (new string(' ', str_maxlength - str_pokemontype.Length - str_type.Type.Name.Length - str_end.Length)) + str_end);
+            }
+            Console.WriteLine("---------------------------------------------------------");
+
+        }//End Output_PokemonData()
+
+        //Output_TypeVsTypeData -: Pretty Prints Type vs Type data
+        //Note: function called iteratively with bool flag to mark last iter
+        private void Output_TypeVsTypeData(PokeApiNet.Type type, int iter, bool end)
         {
-            List<string> t_name;
-            if (Cache_PokemonNameType.TryGetValue(pokemonname, out t_name)) 
-                return t_name;
-            else
+            if (iter == 0)
             {
-                t_name = FindPokemonType(RequestData(BaseURL + "/pokemon/" + pokemonname).Result);
-                Cache_PokemonNameType.Add(pokemonname, t_name);
-                return t_name;
+                Console.WriteLine("---------------------------------------------------------");
+                Console.WriteLine("| Pokemon Type: Strengths and Weaknesses Calculation    |");
+                Console.WriteLine("|                                                       |");
             }
-        }//End RequestPokemonType()
 
-        //RequestData -: use the provided URL to send a GET request and return web api data.
-        private async Task<string> RequestData(string url)
-        {
-            using(HttpClient client = new HttpClient())
+            string str_pokemontype = "| Type: ";
+            string str_end = "|";
+
+            Console.WriteLine(str_pokemontype + new System.Globalization.CultureInfo("en-US", false).TextInfo.ToTitleCase(type.Name)
+                    + (new string(' ', str_maxlength - str_pokemontype.Length - type.Name.Length - str_end.Length)) + str_end);
+
+            string[] str_outputprefix =
             {
-                HttpResponseMessage hrm = await client.GetAsync(url);
-                try { hrm.EnsureSuccessStatusCode(); }
-                catch (Exception) { Console.WriteLine("Failed to service request: " + url);}
+                "| Receives Double Damage from: ",
+                "| Deals Double Damage to: ",
+                "| Receives Half Damage from: ",
+                "| Deals Half Damage to: ",
+                "| Receives No Damage from: ",
+                "| Deals No Damage to: ",
+            };
 
-                return await hrm.Content.ReadAsStringAsync();
-            }
-        }//End RequestData()
+            List<NamedApiResource<PokeApiNet.Type>>[] str_damagerelations =
+            {
+                type.DamageRelations.DoubleDamageFrom,
+                type.DamageRelations.DoubleDamageTo,
+                type.DamageRelations.HalfDamageFrom,
+                type.DamageRelations.HalfDamageTo,
+                type.DamageRelations.NoDamageFrom,
+                type.DamageRelations.NoDamageTo,
+            };
 
-        //FindPokemonType -: finds the pokemon type inside the json.
-        //Note: this data is requested using pokemon name.
-        private List<string> FindPokemonType(string json)
-        {
-            List<string> typedata = new List<string>();
-            PokeAPI.Pokemon data = JsonSerializer.Deserialize<PokeAPI.Pokemon>(json);
+            //ASSERT just incase someone comes back to change this later and messes it up
+            System.Diagnostics.Debug.Assert(str_outputprefix.Length == str_damagerelations.Length, "The number of damage relations must have of the same number output prefixes!");
 
-            return typedata;
-        }//End FindPokemonType
+            //There are 6 types of Damage Relations
+            for(int t_iter_damagerelations = 0; t_iter_damagerelations < str_damagerelations.Length; t_iter_damagerelations++)
+            {
+                //There can be multiple types of each kind of Damage Relation
+                for(int t_iter_relationtype = 0; t_iter_relationtype < str_damagerelations[t_iter_damagerelations].Count; t_iter_relationtype++)
+                {
+                    Console.WriteLine(str_outputprefix[t_iter_damagerelations] 
+                        + new System.Globalization.CultureInfo("en-US", false).TextInfo.ToTitleCase(str_damagerelations[t_iter_damagerelations][t_iter_relationtype].Name)
+                        + (new string(' ', 
+                            str_maxlength - str_outputprefix[t_iter_damagerelations].Length - str_damagerelations[t_iter_damagerelations][t_iter_relationtype].Name.Length - str_end.Length)) 
+                        + str_end);
+                }//End for - DamageRelation Type
+            }//End for - DamageRelation
 
-        //FindTypeData -: finds the type data inside the json.
-        //Note: this data is requested using the pokemon's type that was named.
-        private List<string> FindTypeData(string json)
-        {
-            List<string> typedata = new List<string>();
-            dynamic data = JsonSerializer.Deserialize<dynamic>(json);
-
-            return typedata;
-        }//End FindTypeData()
-
-        */
-
-
+            if(end)
+                Console.WriteLine("---------------------------------------------------------");
+        }//End Output_TypeVsTypeData()
 
     }//End class PokeCalc
 }//End namespace PokeCalc

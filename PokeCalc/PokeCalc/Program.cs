@@ -28,6 +28,7 @@ namespace PokeCalc
                 command = command.Trim('\n');
                 command = command.ToLower();
 
+                //What we're gonna do
                 switch (command)
                 {
                     case "quit":
@@ -35,7 +36,10 @@ namespace PokeCalc
                     case "help":
                         { Help(); break;}
                     default:
-                        { pokecalc.Calculate(command); break;}
+                        {
+                            if (String.IsNullOrWhiteSpace(command)) break;
+                            pokecalc.Calculate(command); break;
+                        }
                 }//end switch
             }//End while
 
@@ -49,11 +53,11 @@ namespace PokeCalc
             Console.WriteLine("|                                                       |");
             Console.WriteLine("| Type the name of a Pokemon to determine: it's type,   |");
             Console.WriteLine("| types of pokemon it's strong against, and types of    |");
-            Console.WriteLine("| pokemon it's weak against.                            |");
+            Console.WriteLine("| pokemon it's weak against. Example: \"butterfree\"      |");
             Console.WriteLine("|                                                       |");
-            Console.WriteLine("| Type help to see this message again.                  |");
+            Console.WriteLine("| Type \"help\" to see this message again.                |");
             Console.WriteLine("|                                                       |");
-            Console.WriteLine("| Type quit to exit the application.                    |");
+            Console.WriteLine("| Type \"quit\" to exit the application.                  |");
             Console.WriteLine("---------------------------------------------------------");
         }//End Help()
 

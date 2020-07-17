@@ -22,15 +22,14 @@ Design Notes:
 		https://pokeapi.co/api/v2/type/{typename}
 		ex: https://pokeapi.co/api/v2/type/normal
 
-	Input Validation
-		Pokemon Names only contain letters a-z, A-Z, and space(s); anything else is illegal.
-
 	Console will be REPL with command options:
 		help - list commands and explain what they do
 		quit - exist the application
 
-	Pulled in this Library/API to simplify JSON serialization by using their models/objects
-	https://gitlab.com/PoroCYon/PokeApi.NET/-/tree/v2/
+	Create a simplified API that minimizes network requests while still getting optimal performance.
+
+	Pulled in this Library/API to simplify JSON serialization along with using their pre-built models.
+	https://github.com/mtrdp642/PokeApiNet
 
 ------------------------------------------------------------------------------------------------------------------------
 Technical Notes:
