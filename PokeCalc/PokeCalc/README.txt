@@ -23,6 +23,7 @@ Design Notes:
 		ex: https://pokeapi.co/api/v2/type/normal
 
 	Console will be REPL with command options:
+		<pokemon-name> - any legal pokemon name that stored being the web-api
 		help - list commands and explain what they do
 		quit - exist the application
 
@@ -33,6 +34,7 @@ Design Notes:
 
 ------------------------------------------------------------------------------------------------------------------------
 Technical Notes:
+	Developed utilizing the following configuration:
 	IDE: Visual Studios 2019
 	Unit Tests: NUnit
 	OS: Windows 7
